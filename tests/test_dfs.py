@@ -14,7 +14,6 @@ def _entries_to_relpaths_with_depth(entries: list[tuple[os.DirEntry[str], int]],
         for entry, depth in entries
     ]
 
-
 def _scan_relpaths_with_depth(
     root: Path,
     *,
@@ -34,7 +33,6 @@ def _scan_relpaths_with_depth(
     )
     return _entries_to_relpaths_with_depth(entries, root)
 
-
 def _scan_relpaths(
     root: Path,
     *,
@@ -53,7 +51,6 @@ def _scan_relpaths(
             include_gitignored=include_gitignored,
         )
     ]
-
 
 def test_scandir_recursive_dfs_respects_depth_first_preorder(make_tree) -> None:
     root = make_tree(
@@ -82,15 +79,11 @@ def test_scandir_recursive_dfs_respects_depth_first_preorder(make_tree) -> None:
     else:
         assert indices["dir/sub2/leaf.txt"] < indices["dir/sub1"]
 
-
 @pytest.mark.parametrize("scan_limit", [0, -1])
 def test_scandir_recursive_dfs_stops_immediately_when_limit_non_positive(make_tree, scan_limit: int) -> None:
     root = make_tree({"a.txt": "", "b.txt": ""})
-
     relpaths = _scan_relpaths(root, scan_limit=scan_limit, include_hidden=True, include_gitignored=True)
-
     assert relpaths == []
-
 
 def test_scandir_recursive_dfs_applies_scan_limit(make_tree) -> None:
     root = make_tree(
@@ -105,9 +98,7 @@ def test_scandir_recursive_dfs_applies_scan_limit(make_tree) -> None:
     )
 
     relpaths = _scan_relpaths(root, scan_limit=2, include_hidden=True, include_gitignored=True)
-
     assert len(relpaths) == 2
-
 
 def test_scandir_recursive_dfs_honors_include_hidden(make_tree) -> None:
     root = make_tree(
@@ -161,7 +152,6 @@ def test_scandir_recursive_dfs_skips_symlinks(make_tree) -> None:
     assert "real_dir" in relpaths
     assert "real_dir/nested.txt" in relpaths
 
-
 def test_scandir_recursive_dfs_skips_permission_and_missing_directories(monkeypatch, make_tree) -> None:
     root = make_tree(
         {
@@ -194,7 +184,6 @@ def test_scandir_recursive_dfs_skips_permission_and_missing_directories(monkeypa
     assert "gone" in relpaths
     assert "gone/gone.txt" not in relpaths
 
-
 def test_scandir_recursive_dfs_honors_max_depth(make_tree) -> None:
     root = make_tree(
         {
@@ -210,7 +199,7 @@ def test_scandir_recursive_dfs_honors_max_depth(make_tree) -> None:
 
     relpaths_with_depth = _scan_relpaths_with_depth(
         root,
-        max_depth=1,
+        max_depth=2,
         include_hidden=True,
         include_gitignored=True,
     )
@@ -221,4 +210,4 @@ def test_scandir_recursive_dfs_honors_max_depth(make_tree) -> None:
     assert "lv1_dir/lv2_file.txt" in relpaths
     assert "lv1_dir/lv2_dir" in relpaths
     assert "lv1_dir/lv2_dir/lv3_file.txt" not in relpaths
-    assert all(depth <= 1 for _, depth in relpaths_with_depth)
+    assert all(depth <= 2 for _, depth in relpaths_with_depth)

@@ -34,7 +34,7 @@ def scan_with_gitignore(
 
     count = 0
     root_node = IgnoreRuleNode(root, load_gitignore_spec(root))
-    yield from gen(root_node, 0)
+    yield from gen(root_node, 1)
 
 def scan_without_gitignore(
     root: Path,
@@ -62,7 +62,7 @@ def scan_without_gitignore(
             pass
 
     count = 0
-    yield from gen(root, 0)
+    yield from gen(root, 1)
 
 def scan(
     directory: str | Path,
