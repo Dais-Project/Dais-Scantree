@@ -1,4 +1,4 @@
-from .bfs import scandir_recursive_bfs
+from .bfs import scan as bfs
 
 
-__all__ = ["scandir_recursive_bfs"]
+__all__ = ["bfs"]

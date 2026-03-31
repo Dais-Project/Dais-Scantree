@@ -5,7 +5,7 @@ from pathlib import Path
 from .ignore_rule import IgnoreRuleNode, load_gitignore_spec, is_hidden
 
 
-def scandir_with_gitignore(root: Path, scan_limit: int, include_hidden: bool = False) -> Generator[os.DirEntry, None, None]:
+def scan_with_gitignore(root: Path, scan_limit: int, include_hidden: bool = False) -> Generator[os.DirEntry, None, None]:
     node_queue: deque[IgnoreRuleNode] = deque([IgnoreRuleNode(root, load_gitignore_spec(root))])
     count = 0
 
@@ -30,7 +30,7 @@ def scandir_with_gitignore(root: Path, scan_limit: int, include_hidden: bool = F
             # Skip inaccessible or deleted directories
             continue
 
-def scandir_without_gitignore(root: Path, scan_limit: int, include_hidden: bool = False) -> Generator[os.DirEntry, None, None]:
+def scan_without_gitignore(root: Path, scan_limit: int, include_hidden: bool = False) -> Generator[os.DirEntry, None, None]:
     queue: deque[Path] = deque([root])
     count = 0
 
@@ -52,7 +52,7 @@ def scandir_without_gitignore(root: Path, scan_limit: int, include_hidden: bool 
             # Skip inaccessible or deleted directories
             continue
 
-def scandir_recursive_bfs(
+def scan(
     directory: str | Path,
     scan_limit: int,
     include_hidden: bool = False,
@@ -69,6 +69,6 @@ def scandir_recursive_bfs(
     root = Path(directory).resolve()
 
     if include_gitignored:
-        yield from scandir_without_gitignore(root, scan_limit, include_hidden)
+        yield from scan_without_gitignore(root, scan_limit, include_hidden)
     else:
-        yield from scandir_with_gitignore(root, scan_limit, include_hidden)
+        yield from scan_with_gitignore(root, scan_limit, include_hidden)

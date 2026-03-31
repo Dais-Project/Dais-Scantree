@@ -1,11 +1,10 @@
 from __future__ import annotations
 
-from pathlib import Path
 import os
+from pathlib import Path
 
 import pytest
-
-from dais_scantree.bfs import scandir_recursive_bfs
+from dais_scantree import bfs as scantree_bfs
 
 
 def _depth(relpath: str) -> int:
@@ -134,7 +133,7 @@ def test_scandir_recursive_bfs_skips_permission_and_missing_directories(monkeypa
     monkeypatch.setattr(os, "scandir", fake_scandir)
 
     entries = list(
-        scandir_recursive_bfs(
+        scantree_bfs(
             root,
             scan_limit=100,
             include_hidden=True,

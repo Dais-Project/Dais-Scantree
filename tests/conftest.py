@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 
 import pytest
-from dais_scantree.bfs import scandir_recursive_bfs
+from dais_scantree import bfs as scantree_bfs
 
 
 type TreeNode = dict[str, TreeNode] | str | None
@@ -45,7 +45,7 @@ def scan_relpaths():
         include_gitignored: bool = False,
     ) -> list[str]:
         entries = list(
-            scandir_recursive_bfs(
+            scantree_bfs(
                 root,
                 scan_limit=scan_limit,
                 include_hidden=include_hidden,
