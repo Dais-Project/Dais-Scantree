@@ -17,8 +17,6 @@ def scan_with_gitignore(root: Path, scan_limit: int, include_hidden: bool = Fals
             with os.scandir(node.path) as entries:
                 for entry in entries:
                     if count >= scan_limit: return
-                    if entry.is_symlink(): continue
-
                     entry_path = Path(entry)
                     if node.check_ignore(entry_path): continue
                     if not include_hidden and is_hidden(entry_path):
@@ -42,7 +40,6 @@ def scan_without_gitignore(root: Path, scan_limit: int, include_hidden: bool = F
             with os.scandir(current_dir) as entries:
                 for entry in entries:
                     if count >= scan_limit: return
-                    if entry.is_symlink(): continue
                     entry_path = Path(entry)
                     if not include_hidden and is_hidden(entry_path):
                         continue
@@ -66,7 +63,7 @@ def scan(
     if scan_limit is less than or equal to 0, the scan will stop immediately and yield nothing.
 
     Yields:
-        os.DirEntry objects for all items (both files and directories) in the directory tree, in BFS order.
+        os.DirEntry objects for all items in the directory tree, in BFS order.
     """
     root = Path(directory).resolve()
 
