@@ -5,7 +5,9 @@ from pathlib import Path
 from .ignore_rule import IgnoreRuleNode, load_gitignore_spec, is_hidden
 
 
-def scan_with_gitignore(root: Path, scan_limit: int, include_hidden: bool = False) -> Generator[os.DirEntry, None, None]:
+type ScanItem = os.DirEntry
+
+def scan_with_gitignore(root: Path, scan_limit: int, include_hidden: bool = False) -> Generator[ScanItem, None, None]:
     node_queue: deque[IgnoreRuleNode] = deque([IgnoreRuleNode(root, load_gitignore_spec(root))])
     count = 0
 
@@ -30,7 +32,7 @@ def scan_with_gitignore(root: Path, scan_limit: int, include_hidden: bool = Fals
             # Skip inaccessible or deleted directories
             continue
 
-def scan_without_gitignore(root: Path, scan_limit: int, include_hidden: bool = False) -> Generator[os.DirEntry, None, None]:
+def scan_without_gitignore(root: Path, scan_limit: int, include_hidden: bool = False) -> Generator[ScanItem, None, None]:
     queue: deque[Path] = deque([root])
     count = 0
 
@@ -57,7 +59,7 @@ def scan(
     scan_limit: int,
     include_hidden: bool = False,
     include_gitignored: bool = False,
-) -> Generator[os.DirEntry, None, None]:
+) -> Generator[ScanItem, None, None]:
     """
     Breadth-first recursive scan.
 

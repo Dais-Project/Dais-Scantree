@@ -1,6 +1,6 @@
 [project]
 name = "dais-scantree"
-version = "0.1.1"
+version = "0.2.0"
 description = "An LLM agent friendly file scanner"
 readme = "README.md"
 authors = [{ name = "BHznJNs", email = "bhznjns@outlook.com" }]
